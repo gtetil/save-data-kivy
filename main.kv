@@ -1,0 +1,16 @@
+#:kivy 1.9.1
+
+<MainScreen>:
+    id: main_screen
+    orientation: 'horizontal'
+    dynamic_layout: app.dynamic_layout
+    indicator_layout: indicator_layout
+
+    GridLayout:
+        id: indicator_layout
+        cols: 1
+
+    GridLayout:
+        id: button_layout
+        rows: 2
+
