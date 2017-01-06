@@ -5,6 +5,7 @@
     orientation: 'horizontal'
     dynamic_layout: app.dynamic_layout
     indicator_layout: indicator_layout
+    button_edit_popup: button_edit_popup
 
     GridLayout:
         id: indicator_layout
@@ -13,4 +14,42 @@
     GridLayout:
         id: button_layout
         rows: 2
+
+    ButtonEditPopup:
+        id: button_edit_popup
+        indicator_layout: indicator_layout
+        label_input: label_input
+        title: "Edit"
+        size_hint: None, None
+        size: 300, 300
+        pos_hint: {'middle': 1, 'top': 1}
+        on_parent: if self.parent == main_screen: self.parent.remove_widget(self)
+
+        BoxLayout:
+            orientation: 'vertical'
+
+            Label:
+                text: 'Enter Label'
+                size_hint: 1, .3
+                text_size: self.width, None
+                height: self.texture_size[1]
+                font_size: '18sp'
+
+            TextInput:
+                id: label_input
+                size_hint: 1, .3
+                text: 'test'
+
+            GridLayout:
+                rows: 1
+                cols: 2
+                size_hint: 1, .4
+
+                Button:
+                    text: 'Yes'
+                    on_release: button_edit_popup.dismiss();
+
+                Button:
+                    text: 'Cancel'
+                    on_release: button_edit_popup.dismiss()
 
