@@ -1,6 +1,30 @@
 {
+    "button_0": {
+        "label": "button_1", 
+        "toggle": true
+    }, 
+    "button_1": {
+        "label": "button_1", 
+        "toggle": true
+    }, 
+    "button_2": {
+        "label": "button_2", 
+        "toggle": true
+    }, 
+    "button_3": {
+        "label": "button_3", 
+        "toggle": false
+    }, 
+    "button_4": {
+        "label": "button_4", 
+        "toggle": true
+    }, 
+    "button_5": {
+        "label": "button_5", 
+        "toggle": false
+    }, 
     "indicator_0": {
-        "label": "test35"
+        "label": "test37"
     }, 
     "indicator_1": {
         "label": "hi"

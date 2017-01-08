@@ -8,6 +8,8 @@
     DynamicLayout:
         id: dynamic_layout
         indicator_layout: indicator_layout
+        button_layout: button_layout
+        indicator_edit_popup: indicator_edit_popup
         button_edit_popup: button_edit_popup
         on_parent: if self.parent == main_screen: self.parent.remove_widget(self)
 
@@ -21,9 +23,9 @@
         size_hint: 0.7, 1
         rows: 2
 
-    ButtonEditPopup:
-        id: button_edit_popup
-        label_input: label_input
+    IndicatorEditPopup:
+        id: indicator_edit_popup
+        ind_label_input: ind_label_input
         dynamic_layout: dynamic_layout
         title: "Change Indicator Label"
         size_hint: None, None
@@ -37,7 +39,7 @@
             padding: 5
 
             TextInput:
-                id: label_input
+                id: ind_label_input
                 size_hint: 1, .4
 
             GridLayout:
@@ -48,11 +50,48 @@
 
                 Button:
                     text: 'OK'
+                    on_press: indicator_edit_popup.save_indicator()
+
+                Button:
+                    text: 'Cancel'
+                    on_press: indicator_edit_popup.dismiss()
+
+    ButtonEditPopup:
+        id: button_edit_popup
+        label_input: label_input
+        toggle_check: toggle_check
+        dynamic_layout: dynamic_layout
+        title: "Change Button Label"
+        size_hint: None, None
+        size: 300, 200
+        pos_hint: {'middle': 1, 'top': 1}
+        on_parent: if self.parent == main_screen: self.parent.remove_widget(self)
+
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 5
+            padding: 5
+
+            TextInput:
+                id: label_input
+                size_hint: 1, 0.25
+
+            CheckBox:
+                id: toggle_check
+                size_hint: 1, 0.25
+
+            GridLayout:
+                rows: 1
+                cols: 2
+                size_hint: 1, 0.5
+                spacing: 5
+
+                Button:
+                    text: 'OK'
                     on_press: button_edit_popup.save_button()
 
                 Button:
                     text: 'Cancel'
                     on_press: button_edit_popup.dismiss()
-
 
 
