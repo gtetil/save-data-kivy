@@ -16,9 +16,11 @@ from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.popup import Popup
 from kivy.clock import Clock
 from kivy.properties import StringProperty, NumericProperty, ObjectProperty, BooleanProperty
+from kivy.animation import Animation
 
 import json
 from functools import partial
+import random
 
 from kivy.core.window import Window
 
@@ -40,6 +42,7 @@ class DynamicLayout(Widget):
     button_layout = ObjectProperty(None)
     indicator_edit_popup = ObjectProperty(None)
     button_edit_popup = ObjectProperty(None)
+    modify_mode = BooleanProperty(False)
     layout_file = 'dynamic_layout.json'
 
     def save_layout(self):
@@ -57,6 +60,8 @@ class DynamicLayout(Widget):
             json.dump(data, fp, sort_keys=True, indent=4)
 
     def build_layout(self):
+        self.indicator_layout.clear_widgets()
+        self.button_layout.clear_widgets()
         with open(self.layout_file, 'r') as fp:
             data = json.load(fp)
         for i in range(6):
@@ -67,22 +72,49 @@ class DynamicLayout(Widget):
 
             button_label = data['button_' + str(i)]['label']
             toggle = data['button_' + str(i)]['toggle']
-            if toggle == "True":
+            if toggle:
                 button = DynToggleButton(text=button_label, id='button_' + str(i))
+                button.bind(modify_mode=self.setter('modify_mode'))
             else:
                 button = DynButton(text=button_label, id='button_' + str(i))
             button.bind(on_press=partial(self.button_edit_popup.edit_popup, 'button_' + str(i)))
             self.button_layout.add_widget(button)
+        if self.modify_mode:
+            self.modify_screen()
+
+    def modify_screen(self):
+        self.modify_mode = True
+        for indicator in self.indicator_layout.children:
+            self.animate(indicator)
+        for button in self.button_layout.children:
+            self.animate(button)
+
+    def end_modify(self):
+        self.modify_mode = False
+        for indicator in self.indicator_layout.children:
+            Animation.cancel_all(indicator)
+            indicator.background_color = 1, 1, 1, 1
+        for button in self.button_layout.children:
+            Animation.cancel_all(button)
+            button.background_color = 1, 1, 1, 1
+
+    def animate(self, widget):
+        anim = Animation(background_color=[1, 1, 0, 0.75], duration=0.5, t='linear') + Animation(
+            background_color=[1, 1, 1, 1], duration=0.5, t='linear')
+        anim.repeat = True
+        anim.start(widget)
 
 class IndicatorEditPopup(Popup):
     ind_label_input = ObjectProperty(None)
     indicator = ObjectProperty(None)
     dynamic_layout = ObjectProperty(None)
+    modify_mode = BooleanProperty(False)
 
     def edit_popup(self, instance, indicator):
-        self.indicator = indicator
-        self.ind_label_input.text = self.indicator.text
-        self.open()
+        if self.modify_mode:
+            self.indicator = indicator
+            self.ind_label_input.text = self.indicator.text
+            self.open()
 
     def save_indicator(self):
         self.indicator.text = self.ind_label_input.text
@@ -94,23 +126,37 @@ class ButtonEditPopup(Popup):
     toggle_check = ObjectProperty(None)
     button = ObjectProperty(None)
     dynamic_layout = ObjectProperty(None)
+    modify_mode = BooleanProperty(False)
 
     def edit_popup(self, instance, button):
-        self.button = button
-        self.label_input.text = self.button.text
-        self.toggle_check.active = self.button.toggle
-        self.open()
+        if self.modify_mode:
+            self.button = button
+            self.label_input.text = self.button.text
+            self.toggle_check.active = self.button.toggle
+            self.open()
 
     def save_button(self):
         self.button.text = self.label_input.text
         self.button.toggle = self.toggle_check.active
         self.dynamic_layout.save_layout()
+        self.dynamic_layout.build_layout()
         self.dismiss()
 
 class DynToggleButton(ToggleButton):
+    modify_mode = BooleanProperty(False)
     toggle = BooleanProperty(True)
 
+    def on_press(self):
+        print(self.state)
+        print(self.modify_mode)
+        if self.modify_mode:
+            if self.state == 'normal':
+                return True
+            else:
+                return False
+
 class DynButton(Button):
+    modify_mode = BooleanProperty(False)
     toggle = BooleanProperty(False)
 
 if __name__ == '__main__':

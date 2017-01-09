@@ -11,22 +11,32 @@
         button_layout: button_layout
         indicator_edit_popup: indicator_edit_popup
         button_edit_popup: button_edit_popup
+        modify_mode: False
         on_parent: if self.parent == main_screen: self.parent.remove_widget(self)
+
+    ToggleButton:
+        id: modify_screen
+        text: 'Modify Screen'
+        size_hint: 0.1, 1
+        on_press:
+            if self.state == 'down': dynamic_layout.modify_screen()
+            else: dynamic_layout.end_modify()
 
     GridLayout:
         id: indicator_layout
-        size_hint: 0.3, 1
+        size_hint: 0.25, 1
         cols: 1
 
     GridLayout:
         id: button_layout
-        size_hint: 0.7, 1
+        size_hint: 0.65, 1
         rows: 2
 
     IndicatorEditPopup:
         id: indicator_edit_popup
         ind_label_input: ind_label_input
         dynamic_layout: dynamic_layout
+        modify_mode: dynamic_layout.modify_mode
         title: "Change Indicator Label"
         size_hint: None, None
         size: 300, 200
@@ -61,6 +71,7 @@
         label_input: label_input
         toggle_check: toggle_check
         dynamic_layout: dynamic_layout
+        modify_mode: dynamic_layout.modify_mode
         title: "Change Button Label"
         size_hint: None, None
         size: 300, 200
@@ -93,5 +104,4 @@
                 Button:
                     text: 'Cancel'
                     on_press: button_edit_popup.dismiss()
-
 

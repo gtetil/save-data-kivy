@@ -5,15 +5,15 @@
     }, 
     "button_1": {
         "label": "button_1", 
-        "toggle": true
+        "toggle": false
     }, 
     "button_2": {
         "label": "button_2", 
-        "toggle": true
+        "toggle": false
     }, 
     "button_3": {
         "label": "button_3", 
-        "toggle": false
+        "toggle": true
     }, 
     "button_4": {
         "label": "button_4", 
@@ -36,7 +36,7 @@
         "label": "text_3"
     }, 
     "indicator_4": {
-        "label": "tetil"
+        "label": "tetilx"
     }, 
     "indicator_5": {
         "label": "text_5"
