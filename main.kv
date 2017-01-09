@@ -35,11 +35,12 @@
     IndicatorEditPopup:
         id: indicator_edit_popup
         ind_label_input: ind_label_input
+        ind_channel_spinner: ind_channel_spinner
         dynamic_layout: dynamic_layout
         modify_mode: dynamic_layout.modify_mode
         title: "Change Indicator Label"
         size_hint: None, None
-        size: 300, 200
+        size: 300, 250
         pos_hint: {'middle': 1, 'top': 1}
         on_parent: if self.parent == main_screen: self.parent.remove_widget(self)
 
@@ -48,14 +49,28 @@
             spacing: 5
             padding: 5
 
-            TextInput:
+            LabelInput:
                 id: ind_label_input
-                size_hint: 1, .4
+                size_hint: 1, .35
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint: 1, .25
+
+                Label:
+                    text: 'Channel:'
+                    size_hint: .3, 1
+
+                Spinner:
+                    id: ind_channel_spinner
+                    size_hint: .7, 1
+                    text: '0'
+                    values: ('0', '1', '2', '3', '4', '5')
 
             GridLayout:
                 rows: 1
                 cols: 2
-                size_hint: 1, .6
+                size_hint: 1, .4
                 spacing: 5
 
                 Button:
@@ -70,11 +85,12 @@
         id: button_edit_popup
         label_input: label_input
         toggle_check: toggle_check
+        channel_spinner: channel_spinner
         dynamic_layout: dynamic_layout
         modify_mode: dynamic_layout.modify_mode
         title: "Change Button Label"
         size_hint: None, None
-        size: 300, 200
+        size: 300, 250
         pos_hint: {'middle': 1, 'top': 1}
         on_parent: if self.parent == main_screen: self.parent.remove_widget(self)
 
@@ -83,18 +99,40 @@
             spacing: 5
             padding: 5
 
-            TextInput:
+            LabelInput:
                 id: label_input
-                size_hint: 1, 0.25
+                size_hint: 1, 0.3
 
-            CheckBox:
-                id: toggle_check
-                size_hint: 1, 0.25
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint: 1, .2
+
+                Label:
+                    text: 'Toggle?:'
+                    size_hint: .3, 1
+
+                CheckBox:
+                    id: toggle_check
+                    size_hint: .7, 1
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint: 1, .2
+
+                Label:
+                    text: 'Channel:'
+                    size_hint: .3, 1
+
+                Spinner:
+                    id: channel_spinner
+                    size_hint: .7, 1
+                    text: '0'
+                    values: ('0', '1', '2', '3', '4', '5')
 
             GridLayout:
                 rows: 1
                 cols: 2
-                size_hint: 1, 0.5
+                size_hint: 1, 0.3
                 spacing: 5
 
                 Button:
@@ -105,3 +143,9 @@
                     text: 'Cancel'
                     on_press: button_edit_popup.dismiss()
 
+
+<IndicatorButton, DynToggleButton, DynButton, LabelInput@TextInput>:
+    text_size: self.size
+    font_size: '18sp'
+    halign: 'center'
+    valign: 'middle'

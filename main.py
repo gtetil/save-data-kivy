@@ -50,11 +50,13 @@ class DynamicLayout(Widget):
         for indicator in self.indicator_layout.children:
             config = {}
             config['label'] = indicator.text
+            config['channel'] = indicator.channel
             data[indicator.id] = config
         for button in self.button_layout.children:
             config = {}
             config['label'] = button.text
             config['toggle'] = button.toggle
+            config['channel'] = button.channel
             data[button.id] = config
         with open(self.layout_file, 'w') as fp:
             json.dump(data, fp, sort_keys=True, indent=4)
@@ -66,18 +68,21 @@ class DynamicLayout(Widget):
             data = json.load(fp)
         for i in range(6):
             indicator_label = data['indicator_'+str(i)]['label']
-            indicator_button = Button(text=indicator_label, id='indicator_' + str(i))
+            channel = data['button_' + str(i)]['channel']
+            indicator_button = IndicatorButton(text=indicator_label, id='indicator_' + str(i))
             indicator_button.bind(on_press=partial(self.indicator_edit_popup.edit_popup, 'indicator_' + str(i)))
+            indicator_button.set_properties('null', channel)
             self.indicator_layout.add_widget(indicator_button)
 
             button_label = data['button_' + str(i)]['label']
             toggle = data['button_' + str(i)]['toggle']
+            channel = data['button_' + str(i)]['channel']
             if toggle:
                 button = DynToggleButton(text=button_label, id='button_' + str(i))
-                button.bind(modify_mode=self.setter('modify_mode'))
             else:
                 button = DynButton(text=button_label, id='button_' + str(i))
             button.bind(on_press=partial(self.button_edit_popup.edit_popup, 'button_' + str(i)))
+            button.set_properties(self, channel)
             self.button_layout.add_widget(button)
         if self.modify_mode:
             self.modify_screen()
@@ -106,6 +111,7 @@ class DynamicLayout(Widget):
 
 class IndicatorEditPopup(Popup):
     ind_label_input = ObjectProperty(None)
+    ind_channel_spinner = ObjectProperty(None)
     indicator = ObjectProperty(None)
     dynamic_layout = ObjectProperty(None)
     modify_mode = BooleanProperty(False)
@@ -114,16 +120,19 @@ class IndicatorEditPopup(Popup):
         if self.modify_mode:
             self.indicator = indicator
             self.ind_label_input.text = self.indicator.text
+            self.ind_channel_spinner.text = str(self.indicator.channel)
             self.open()
 
     def save_indicator(self):
         self.indicator.text = self.ind_label_input.text
+        self.indicator.channel = int(self.ind_channel_spinner.text)
         self.dynamic_layout.save_layout()
         self.dismiss()
 
 class ButtonEditPopup(Popup):
     label_input = ObjectProperty(None)
     toggle_check = ObjectProperty(None)
+    channel_spinner = ObjectProperty(None)
     button = ObjectProperty(None)
     dynamic_layout = ObjectProperty(None)
     modify_mode = BooleanProperty(False)
@@ -133,31 +142,51 @@ class ButtonEditPopup(Popup):
             self.button = button
             self.label_input.text = self.button.text
             self.toggle_check.active = self.button.toggle
+            self.channel_spinner.text = str(self.button.channel)
             self.open()
 
     def save_button(self):
         self.button.text = self.label_input.text
         self.button.toggle = self.toggle_check.active
+        self.button.channel = int(self.channel_spinner.text)
         self.dynamic_layout.save_layout()
         self.dynamic_layout.build_layout()
         self.dismiss()
 
 class DynToggleButton(ToggleButton):
-    modify_mode = BooleanProperty(False)
+    dynamic_layout = ObjectProperty(None)
     toggle = BooleanProperty(True)
+    channel = NumericProperty(0)
+
+    def set_properties(self, ref, channel):
+        self.dynamic_layout = ref
+        self.channel = channel
 
     def on_press(self):
-        print(self.state)
-        print(self.modify_mode)
-        if self.modify_mode:
-            if self.state == 'normal':
-                return True
-            else:
-                return False
+        if self.dynamic_layout.modify_mode:
+            self.state = 'normal'
 
 class DynButton(Button):
-    modify_mode = BooleanProperty(False)
+    dynamic_layout = ObjectProperty(None)
     toggle = BooleanProperty(False)
+    channel = NumericProperty(0)
+
+    def set_properties(self, ref, channel):
+        self.dynamic_layout = ref
+        self.channel = channel
+
+    def on_press(self):
+        if self.dynamic_layout.modify_mode:
+            self.state = 'normal'
+
+class IndicatorButton(Button):
+    channel = NumericProperty(0)
+
+    def set_properties(self, ref, channel):
+        self.channel = channel
+
+    def on_press(self):
+        self.state = 'normal'
 
 if __name__ == '__main__':
 
