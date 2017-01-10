@@ -1,56 +1,68 @@
 {
     "button_0": {
-        "channel": 3, 
-        "label": "button_1\ntest", 
-        "toggle": false
+        "channel": 4, 
+        "enable": true, 
+        "label": "button_1", 
+        "toggle": true
     }, 
     "button_1": {
-        "channel": 0, 
-        "label": "button_1", 
+        "channel": 5, 
+        "enable": true, 
+        "label": "button", 
         "toggle": false
     }, 
     "button_2": {
         "channel": 0, 
+        "enable": true, 
         "label": "button_2", 
-        "toggle": false
+        "toggle": true
     }, 
     "button_3": {
         "channel": 2, 
+        "enable": true, 
         "label": "button_3", 
         "toggle": true
     }, 
     "button_4": {
-        "channel": 0, 
+        "channel": 1, 
+        "enable": true, 
         "label": "button_4", 
         "toggle": true
     }, 
     "button_5": {
         "channel": 0, 
-        "label": "", 
+        "enable": false, 
+        "label": "test", 
         "toggle": true
     }, 
     "indicator_0": {
-        "channel": 3, 
+        "channel": 4, 
+        "enable": true, 
         "label": "test\n37"
     }, 
     "indicator_1": {
         "channel": 0, 
+        "enable": true, 
         "label": "hi"
     }, 
     "indicator_2": {
         "channel": 0, 
+        "enable": true, 
         "label": "Jenna"
     }, 
     "indicator_3": {
         "channel": 2, 
+        "enable": true, 
         "label": "text_3"
     }, 
     "indicator_4": {
         "channel": 0, 
+        "enable": true, 
         "label": "tetilx"
     }, 
     "indicator_5": {
         "channel": 0, 
+        "enable": false, 
         "label": "text_5"
     }
 }
